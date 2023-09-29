@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import DroneGenerator from "./components/DroneGenerator";
+import WaveformVisualizer from "./components/WaveformVisualizer";
 
 function App() {
+  const [count, setCount] = useState(1);
+  const [control, setControl] = useState("stop");
+
+  const [waveformData, setWaveformData] = useState([]);
+
+  const toggleDrone = () => {
+    setControl((prevControl) => (prevControl === "start" ? "stop" : "start"));
+  };
+
+  const handleAddDrone = () => {
+    setCount((prevCount) => prevCount + 1);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>LFO Visualizer</h1>
+      <button onClick={toggleDrone}>
+        {control === "start" ? "Stop All Drones" : "Start All Drones"}
+      </button>
+
+      <button onClick={handleAddDrone}>Add</button>
+      <button onClick={() => setCount(count - 1)}>Remove</button>
+
+      {Array.from({ length: count }, (_, i) => (
+        <DroneGenerator
+          key={i}
+          control={control}
+          setWaveformData={setWaveformData}
+        />
+      ))}
+
+      <WaveformVisualizer waveformData={waveformData} />
     </div>
   );
 }
